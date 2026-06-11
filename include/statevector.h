@@ -15,4 +15,11 @@ class StateVector {
         void display();
 
         // Quantum gate functions
+        void apply_pauliX(int target_qubit);
+        void apply_pauliY(int target_quubit);
+        void apply_pauliZ(int target_qubit);
+
+        void apply_hadamard(int target_qubit);
+
+        void apply_cnot(int target_qubit, int control_qubit);
 };

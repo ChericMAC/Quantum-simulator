@@ -1,9 +1,8 @@
 #include "statevector.h"
+#include "gates.h"
 #include <iostream>
 #include <bitset>
 #include <cmath>
-using namespace std;
-using comp=complex<double>;
 
 // Function that initializes the primal state of the quantum values
 StateVector::StateVector(int qubits) {
@@ -32,4 +31,48 @@ void StateVector::display() {
 
         cout << "|" << binary_representation << ">:" << real << "+" << imag << "i" << endl;
     }
+}
+
+void StateVector::apply_pauliX(int target_qubit) {
+    if (target_qubit < 0 || target_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    pauliX(data, target_qubit);
+}
+
+void StateVector::apply_pauliY(int target_qubit) {
+    if (target_qubit < 0 || target_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    pauliY(data, target_qubit);
+}
+
+void StateVector::apply_pauliZ(int target_qubit) {
+    if (target_qubit < 0 || target_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    pauliZ(data, target_qubit);
+}
+
+void StateVector::apply_hadamard(int target_qubit) {
+    if (target_qubit < 0 || target_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    hadamard(data, target_qubit);
+}
+
+void StateVector::apply_cnot(int target_qubit, int control_qubit) {
+    if (target_qubit < 0 || target_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    else if (control_qubit < 0 || control_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    cnot(data, target_qubit, control_qubit);
 }
