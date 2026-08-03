@@ -141,6 +141,7 @@ void Rx(vector<comp>& data, int target_qubit, double theta) {
         }
     }
 }
+
 void Ry(vector<comp>& data, int target_qubit, double theta) {
     int target = 1 << target_qubit;
     double cosinus = cos(theta/2.0);

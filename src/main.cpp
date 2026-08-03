@@ -1,8 +1,9 @@
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <stdexcept>
-#include "statevector.h"
+#include "gate_cache_manager.h"
 using namespace std;
 
 int main() {
@@ -11,7 +12,7 @@ int main() {
     int qubits;
     cin >> qubits;
     cin.ignore();
-    StateVector statevector(qubits);
+    GateCacheManager cache(qubits);
 
     string last_command = "";
     string command;
@@ -45,7 +46,8 @@ int main() {
 
         else if (command == "d") {
             cout << endl;
-            statevector.display();
+            cache.execute_cache();
+            cache.statevector.display();
             continue;
         }
 
@@ -66,7 +68,7 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_pauliX(target);
+                cache.add_gate(header, target);
             }
             
             else if (header == "PY") {
@@ -81,8 +83,9 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_pauliY(target);
+                cache.add_gate(header, target);            
             }
+            
             else if (header == "PZ") {
                 int target;
                 char dumper;
@@ -95,7 +98,7 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_pauliZ(target);
+                cache.add_gate("RZ", target, 2 * M_PI);       
             }
 
             else if (header == "H") {
@@ -110,7 +113,7 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_hadamard(target);
+                cache.add_gate(header, target);
             }
 
             else if (header == "CNOT") {
@@ -123,8 +126,8 @@ int main() {
                 if (ss >> dump) {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
-
-                statevector.apply_cnot(target, control);
+                cache.execute_cache();
+                cache.statevector.apply_cnot(target, control);
             }
 
             else if (header == "S") {
@@ -138,7 +141,7 @@ int main() {
                 else if (ss >> dumper) {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
-                statevector.apply_Sgate(target);
+                cache.add_gate("RZ", target, M_PI);
             }
 
             else if (header == "T") {
@@ -152,7 +155,7 @@ int main() {
                 else if (ss >> dumper) {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
-                statevector.apply_Tgate(target);
+                cache.add_gate("RZ", target, M_PI / 2);
             }
 
             else if (header == "SD") {
@@ -166,7 +169,7 @@ int main() {
                 else if (ss >> dumper) {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
-                statevector.apply_S_Dager_gate(target);
+                cache.add_gate("RZ", target, -M_PI);
             }
 
             else if (header == "TD") {
@@ -180,7 +183,7 @@ int main() {
                 else if (ss >> dumper) {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
-                statevector.apply_T_Dager_gate(target);
+                cache.add_gate("RZ", target, -M_PI / 2);
             }
 
             else if (header == "RX") {
@@ -195,7 +198,7 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_Rx(target, theta);
+                cache.add_gate(header, target, theta);
             }
 
             else if (header == "RY") {
@@ -210,7 +213,7 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_Ry(target, theta);
+                cache.add_gate(header, target, theta);
             }
 
             else if (header == "RZ") {
@@ -225,7 +228,7 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_Rz(target, theta);
+                cache.add_gate(header, target, theta);
             }
 
             else if (header == "CZG") {
@@ -239,7 +242,8 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_CZgate(target, control);
+                cache.execute_cache();
+                cache.statevector.apply_CZgate(target, control);
             }
 
             else if (header == "SWAP") {
@@ -253,7 +257,8 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_swap(target1, target2);
+                cache.execute_cache();
+                cache.statevector.apply_swap(target1, target2);
             }
 
             else if (header == "TFL") {
@@ -267,7 +272,8 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_toffoli(target, control1, control2);
+                cache.execute_cache();
+                cache.statevector.apply_toffoli(target, control1, control2);
             }
 
             else if (header == "FK") {
@@ -281,7 +287,8 @@ int main() {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
-                statevector.apply_fredkin(target1, target2, control);
+                cache.execute_cache();
+                cache.statevector.apply_fredkin(target1, target2, control);
             }
             
             else {
