@@ -1,5 +1,6 @@
 #include "statevector.h"
 #include "gates.h"
+#include "run.h"
 #include <iostream>
 #include <bitset>
 #include <cmath>
@@ -213,4 +214,8 @@ void StateVector::apply_fredkin(int target_qubit1, int target_qubit2, int contro
     }
 
     fredkin(data, target_qubit1, target_qubit2, control_qubit);
+}
+
+void StateVector::apply_generate_results() {
+    generate_results(data, num_qubits);
 }

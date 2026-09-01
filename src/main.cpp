@@ -7,7 +7,7 @@
 using namespace std;
 
 int main() {
-    cout << "Qunatum computer simulator. Type 'q' to exit, 'h' for information and 'd' to StateVector current state:" << endl;
+    cout << "Qunatum computer simulator. Type 'q' to exit, 'h' for information, 'd' to StateVector current state and 'r' to run the circuit." << endl;
     cout << "How many qubits do you want to simulate? (1-20): ";
     int qubits;
     cin >> qubits;
@@ -49,6 +49,13 @@ int main() {
             cache.execute_cache();
             cache.statevector.display();
             continue;
+        }
+        
+        else if (command == "r") {
+            cout << endl;
+            cache.execute_cache();
+            cache.statevector.apply_generate_results();
+            break;
         }
 
         try {

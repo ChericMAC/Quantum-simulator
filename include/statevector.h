@@ -37,4 +37,6 @@ class StateVector {
 
         void apply_toffoli(int target_qubit, int control_qubit1, int control_qubit2);
         void apply_fredkin(int target_qubit1, int target_qubit2, int control_qubit);
+        
+        void apply_generate_results();
 };
