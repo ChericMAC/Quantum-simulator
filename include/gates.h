@@ -27,3 +27,5 @@ void SWAP(vector<comp>& data, int target_qubit1, int target_qubit2);
 
 void toffoli(vector<comp>& data, int target_qubit, int control_qubit1, int control_qubit2);
 void fredkin(vector<comp>& data, int target_qubit1, int target_qubit2, int control_qubit);
+
+void ControlledPhase(vector<comp>& data, int target_qubit, int control_qubit, double theta);

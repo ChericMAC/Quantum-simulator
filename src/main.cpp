@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
+#include <chrono>
 #include "gate_cache_manager.h"
 using namespace std;
 
@@ -12,6 +13,7 @@ int main() {
     int qubits;
     cin >> qubits;
     cin.ignore();
+    chrono::steady_clock::time_point start;
     GateCacheManager cache(qubits);
 
     string last_command = "";
@@ -41,6 +43,8 @@ int main() {
             cout << "   - SWAP: SWAP target_qubit1[int] target_qubit2[int]" << endl;
             cout << "   - Toffoli: TFL target_qubit[int] control_qubit1[int] control_qubit2[int]" << endl;
             cout << "   - Fredkin: FK target_qubit1[int] target_qubit2[int] control_qubit[int]" << endl;
+            cout << "   - Controlled Phase: CP target_qubit[int] control_qubit[int] theta[double]" << endl;
+            cout << "   - TIMER_START: Special function to start the timer for efficiency study" << endl;
             continue;
         }
 
@@ -51,10 +55,36 @@ int main() {
             continue;
         }
         
+        else if (command == "TIMER_START") {
+            start = chrono::high_resolution_clock::now();
+        }
+
         else if (command == "r") {
-            cout << endl;
+            int shots;
+            char list, chart;
+            cout << "Number of shots: ";
+            cin >> shots;
+            cout << "Show results in CLI? (y/n): ";
+            cin >> list;
+            cout << "Create result chart? (y/n): ";
+            cin >> chart;
+
             cache.execute_cache();
-            cache.statevector.apply_generate_results();
+
+            auto gates_end = chrono::high_resolution_clock::now();
+
+            chrono::duration<double, milli> duration_gates = gates_end - start;
+
+            cout << "Gate execution time: " << duration_gates.count() << "ms" << endl;
+
+            cache.statevector.apply_generate_results(shots, list, chart);
+
+            auto end = chrono::high_resolution_clock::now();
+
+            chrono::duration<double, milli> duration = end - start;
+
+            cout << "Total execution time: " << duration.count() << "ms" << endl;
+
             break;
         }
 
@@ -72,7 +102,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.add_gate(header, target);
@@ -87,7 +117,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.add_gate(header, target);            
@@ -102,7 +132,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.add_gate("RZ", target, 2 * M_PI);       
@@ -117,7 +147,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.add_gate(header, target);
@@ -131,7 +161,7 @@ int main() {
                     throw runtime_error("CNOT gate requires 2 parameters (control & target). Examlpe: CNOT 2 1");
                 }
                 if (ss >> dump) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
                 cache.execute_cache();
                 cache.statevector.apply_cnot(target, control);
@@ -146,7 +176,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
                 cache.add_gate("RZ", target, M_PI);
             }
@@ -160,7 +190,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
                 cache.add_gate("RZ", target, M_PI / 2);
             }
@@ -174,7 +204,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
                 cache.add_gate("RZ", target, -M_PI);
             }
@@ -188,7 +218,7 @@ int main() {
                 }
 
                 else if (ss >> dumper) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
                 cache.add_gate("RZ", target, -M_PI / 2);
             }
@@ -202,7 +232,7 @@ int main() {
                     throw runtime_error("RX gate requires 2 parameters (target & theta). Example: RX 2 22.5");
                 }
                 if (ss >> dump) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.add_gate(header, target, theta);
@@ -217,7 +247,7 @@ int main() {
                     throw runtime_error("RX gate requires 2 parameters (target & theta). Example: RX 2 22.5");
                 }
                 if (ss >> dump) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.add_gate(header, target, theta);
@@ -232,7 +262,7 @@ int main() {
                     throw runtime_error("RX gate requires 2 parameters (target & theta). Example: RX 2 22.5");
                 }
                 if (ss >> dump) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.add_gate(header, target, theta);
@@ -243,10 +273,10 @@ int main() {
                 char dump;
 
                 if (!(ss >> target >> control)) {
-                    throw runtime_error("CZ gate requires 2 parameters (control & target). Examlpe: CZG 2 1");
+                    throw runtime_error("CZ gate requires 2 parameters (control & target). Example: CZG 2 1");
                 }
                 if (ss >> dump) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.execute_cache();
@@ -258,10 +288,10 @@ int main() {
                 char dump;
 
                 if (!(ss >> target1 >> target2)) {
-                    throw runtime_error("SWAP gate requires 2 parameters (target1 & target2). Examlpe: SWAP 2 1");
+                    throw runtime_error("SWAP gate requires 2 parameters (target1 & target2). Example: SWAP 2 1");
                 }
                 if (ss >> dump) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.execute_cache();
@@ -273,10 +303,10 @@ int main() {
                 char dump;
 
                 if (!(ss >> target >> control1 >> control2)) {
-                    throw runtime_error("Toffoli gate requires 3 parameters (target, control1, control2). Examlpe: TFL 2 1 0");
+                    throw runtime_error("Toffoli gate requires 3 parameters (target, control1, control2). Example: TFL 2 1 0");
                 }
                 if (ss >> dump) {
-                    throw runtime_error("Format error. Excesive parameters.");
+                    throw runtime_error("Format error. Excessive parameters.");
                 }
 
                 cache.execute_cache();
@@ -288,16 +318,33 @@ int main() {
                 char dump;
 
                 if (!(ss >> target1 >> target2 >> control)) {
-                    throw runtime_error("Fredkin gate requires 3 parameters (target1, target2, control). Examlpe: TFL 2 1 0");
+                    throw runtime_error("Fredkin gate requires 3 parameters (target1, target2, control). Example: TFL 2 1 0");
+                }
+                if (ss >> dump) {
+                    throw runtime_error("Format error. Excessive parameters.");
+                }
+
+                cache.execute_cache();
+                cache.statevector.apply_fredkin(target1, target2, control);
+            }
+
+            else if (header == "CP") {
+                int target, control;
+                double theta;
+                char dump;
+
+                if (!(ss >> target >> control >> theta)) {
+                    throw runtime_error("Controlled Phase gate requires 3 parameters (target, control, theta). Example: CP 2 1 22.5");
                 }
                 if (ss >> dump) {
                     throw runtime_error("Format error. Excesive parameters.");
                 }
 
                 cache.execute_cache();
-                cache.statevector.apply_fredkin(target1, target2, control);
+                cache.statevector.apply_ControlledPhase(target, control, theta);
+
             }
-            
+
             else {
                 throw runtime_error("Non-existing command. Type h to get the list of available gates.");
             }

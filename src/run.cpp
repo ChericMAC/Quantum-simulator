@@ -8,7 +8,7 @@
 #include <bitset>
 #include <cstdlib>
 
-void generate_results(vector<comp>& data, int num_qubits) {
+void generate_results(vector<comp>& data, int num_qubits, int shots, char list, char chart) {
     vector<double> prob(data.size());
 
     for (int i = 0; i < data.size(); i++) {
@@ -20,7 +20,7 @@ void generate_results(vector<comp>& data, int num_qubits) {
     discrete_distribution<int> dist(prob.begin(), prob.end());
 
     map<int, int> counts;
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < shots; i++) {
         int sample = dist(gen);
         counts[sample]++;
     }
@@ -31,23 +31,29 @@ void generate_results(vector<comp>& data, int num_qubits) {
 
     file.open(path, ios::out | ios::trunc);
 
-    cout << "===== RESULTS =====" << endl;
-
+    if (list == 'y') {
+        cout << "===== RESULTS =====" << endl;
+    }
     for (int i = 0; i < data.size(); i++) {
         string binary_representation = bitset<32>(i).to_string().substr(32-num_qubits);
 
+        if (list == 'y') {
         cout << binary_representation << ": " << counts[i] << endl;
-
+        }
+        
         file << binary_representation << "," << counts[i] << endl;
     }
 
     file.close();
 
+    if (list == 'y') {
     cout << "===================" << endl;
-
-    #ifdef _WIN32
-        int result = system("python auxiliar/chart.py");
-    #else
-        int result = system("python3 auxiliar/chart.py");
-    #endif
+    }
+    if (chart == 'y') {
+        #ifdef _WIN32
+            int result = system("python auxiliar/chart.py");
+        #else
+            int result = system("python3 auxiliar/chart.py");
+        #endif
+    }
 }

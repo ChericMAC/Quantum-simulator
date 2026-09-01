@@ -216,6 +216,23 @@ void StateVector::apply_fredkin(int target_qubit1, int target_qubit2, int contro
     fredkin(data, target_qubit1, target_qubit2, control_qubit);
 }
 
-void StateVector::apply_generate_results() {
-    generate_results(data, num_qubits);
+void StateVector::apply_ControlledPhase(int target_qubit, int control_qubit, double theta) {
+    if (target_qubit < 0 || target_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    else if (control_qubit < 0 || control_qubit >= num_qubits) {
+        cout << "Error: Target out of range!" << endl;
+        return;
+    }
+    else if (control_qubit == target_qubit) {
+        cout << "Error: Target qubit can't be equal to control qubit" << endl;
+        return;
+    }
+
+    ControlledPhase(data, target_qubit, control_qubit, theta);
+}
+
+void StateVector::apply_generate_results(int shots, char list, char chart) {
+    generate_results(data, num_qubits, shots, list, chart);
 }
