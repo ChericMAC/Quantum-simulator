@@ -222,7 +222,7 @@ void ControlledPhase(vector<comp>& data, int target_qubit, int control_qubit, do
     comp multiplier = comp(cos(theta/2.0), sin(theta/2.0));
 
     for (int i = 0; i < data.size(); i++) {
-        if ((i & control) != 0 && (i & target) == 0) {
+        if ((i & control) != 0 && (i & target) != 0) {
             data[i] *= multiplier;
         }
     }
