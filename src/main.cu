@@ -62,6 +62,7 @@ int main() {
         
         else if (command == "TIMER_START") {
             start = chrono::high_resolution_clock::now();
+            continue;
         }
 
         else if (command == "r") {
