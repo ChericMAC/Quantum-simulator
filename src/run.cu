@@ -55,9 +55,9 @@ void generate_results(vector<cuDoubleComplex>& data, int num_qubits, int shots, 
     }
     if (chart == 'y') {
         #ifdef _WIN32
-            int result = system("python auxiliar/chart.py");
+            int result = system("python tools/chart.py");
         #else
-            int result = system("python3 auxiliar/chart.py");
+            int result = system("python3 tools/chart.py");
         #endif
     }
 }
