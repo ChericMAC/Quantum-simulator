@@ -2,7 +2,6 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
-#include <chrono>
 #include <numbers>
 #include "gate_cache_manager.h"
 #include "statevector.cuh"
@@ -18,7 +17,6 @@ int main() {
     int qubits;
     cin >> qubits;
     cin.ignore();
-    chrono::steady_clock::time_point start;
     GateCacheManager cache(qubits);
 
     string last_command = "";
@@ -49,7 +47,6 @@ int main() {
             cout << "   - Toffoli: TFL target_qubit[int] control_qubit1[int] control_qubit2[int]" << endl;
             cout << "   - Fredkin: FK target_qubit1[int] target_qubit2[int] control_qubit[int]" << endl;
             cout << "   - Controlled Phase: CP target_qubit[int] control_qubit[int] theta[double]" << endl;
-            cout << "   - TIMER_START: Special function to start the timer for efficiency study" << endl;
             continue;
         }
 
@@ -60,10 +57,6 @@ int main() {
             continue;
         }
         
-        else if (command == "TIMER_START") {
-            start = chrono::high_resolution_clock::now();
-            continue;
-        }
 
         else if (command == "r") {
             int shots;
@@ -77,19 +70,7 @@ int main() {
 
             cache.execute_cache();
 
-            auto gates_end = chrono::high_resolution_clock::now();
-
-            chrono::duration<double, milli> duration_gates = gates_end - start;
-
-            cout << "Gate execution time: " << duration_gates.count() << "ms" << endl;
-
             cache.statevector -> apply_generate_results(shots, list, chart);
-
-            auto end = chrono::high_resolution_clock::now();
-
-            chrono::duration<double, milli> duration = end - start;
-
-            cout << "Total execution time: " << duration.count() << "ms" << endl;
 
             break;
         }
