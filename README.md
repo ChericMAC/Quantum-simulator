@@ -57,7 +57,7 @@ Make sure all prerequisites are met, then follow these steps:
 3. Open an **x64 Native Tools Command Prompt** and navigate to the project folder.
 4. Compile using the `nvcc` CUDA compiler:
 ```bash
-nvcc -std=c++20 -Iinclude -c src/main.cu src/gate_cache_manager.cu src/run.cu src/gates.cu src/statevector.cu && nvcc gate_cache_manager.obj main.obj run.obj gates.obj statevector.obj -o main.exe
+nvcc -std=c++20 src/main.cu src/gates.cu src/gate_cache_manager.cu src/statevector.cu src/run.cu -Iinclude -o main.ex
 ```
 5.  Execute the program:
 ```bash
