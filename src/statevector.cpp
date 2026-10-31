@@ -14,7 +14,7 @@ StateVector::StateVector(int qubits) {
         num_qubits = 1;
     }
     else if (qubits > 25) {
-        cout << "Error: Maximum number of qubits per vector is 20. Setting StateVector to 20 qubits." << endl;
+        cout << "Error: Maximum number of qubits per vector is 25. Setting StateVector to 25 qubits." << endl;
         num_qubits = 25;
     }
 
