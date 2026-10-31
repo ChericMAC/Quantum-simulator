@@ -9,7 +9,7 @@ using namespace std;
 
 int main() {
     cout << "Qunatum computer simulator. Type 'q' to exit, 'h' for information, 'd' to StateVector current state and 'r' to run the circuit." << endl;
-    cout << "How many qubits do you want to simulate? (1-20): ";
+    cout << "How many qubits do you want to simulate? (1-25): ";
     int qubits;
     cin >> qubits;
     cin.ignore();
