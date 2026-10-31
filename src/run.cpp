@@ -9,9 +9,10 @@
 #include <cstdlib>
 
 void generate_results(vector<comp>& data, int num_qubits, int shots, char list, char chart) {
-    vector<double> prob(data.size());
+    size_t total_states = data.size();
+    vector<double> prob(total_states);
 
-    for (int i = 0; i < data.size(); i++) {
+    for (int i = 0; i < total_states; i++) {
         prob[i] = norm(data[i]);
     }
 
@@ -19,7 +20,7 @@ void generate_results(vector<comp>& data, int num_qubits, int shots, char list, 
     mt19937 gen(rd());
     discrete_distribution<int> dist(prob.begin(), prob.end());
 
-    map<int, int> counts;
+    vector<int> counts(total_states, 0);
     for (int i = 0; i < shots; i++) {
         int sample = dist(gen);
         counts[sample]++;
@@ -34,14 +35,18 @@ void generate_results(vector<comp>& data, int num_qubits, int shots, char list, 
     if (list == 'y') {
         cout << "===== RESULTS =====" << endl;
     }
-    for (int i = 0; i < data.size(); i++) {
-        string binary_representation = bitset<32>(i).to_string().substr(32-num_qubits);
 
-        if (list == 'y') {
-        cout << binary_representation << ": " << counts[i] << endl;
+    for (int i = 0; i < total_states; i++) {
+        if (counts[i] > 0) {
+            string binary_representation = bitset<32>(i).to_string().substr(32-num_qubits);
+
+            if (list == 'y') {
+            cout << binary_representation << ": " << counts[i] << endl;
+            }
+            
+            file << binary_representation << "," << counts[i] << endl;
+    
         }
-        
-        file << binary_representation << "," << counts[i] << endl;
     }
 
     file.close();

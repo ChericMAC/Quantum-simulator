@@ -13,9 +13,9 @@ StateVector::StateVector(int qubits) {
         cout << "Error: Minimum number of qubits per vector is 1. Setting StateVector to one qubit." << endl;
         num_qubits = 1;
     }
-    else if (qubits > 20) {
+    else if (qubits > 25) {
         cout << "Error: Maximum number of qubits per vector is 20. Setting StateVector to 20 qubits." << endl;
-        num_qubits = 20;
+        num_qubits = 25;
     }
 
     // Create the state vector with the number of possible quantum states, being 2^(number of qubits)

@@ -17,6 +17,3 @@ class GateCacheManager {
         void add_gate(string code, int target, double theta = 0);
         void execute_cache();
 };
-
-/*Hacer que PZ, t, s, td, sd sean rotaciones de estilo Rz
-cambiar orden para los calculos, para incluir statevector en gatecache por conveniencia.*/
